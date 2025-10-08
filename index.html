@@ -6,8 +6,6 @@
     <title>Word Web - Poki Game</title>
     <!-- Simple favicon to prevent 404 -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
-    <!-- Use CDN for reliable cross-platform compatibility -->
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.min.js"></script>
     <style>
       body {
         margin: 0;
@@ -27,11 +25,49 @@
       canvas {
         display: block;
       }
+      #loading {
+        color: white;
+        font-size: 24px;
+        text-align: center;
+      }
     </style>
   </head>
   <body>
     <div id="game-container">
-      <script type="module" src="./src/main.js"></script>
+      <div id="loading">Loading Word Web...</div>
     </div>
+    
+    <!-- Load Phaser first, then load the game -->
+    <script>
+      // Function to load the game
+      function loadGame() {
+        if (typeof Phaser !== 'undefined') {
+          // Remove loading message
+          const loading = document.getElementById('loading');
+          if (loading) loading.style.display = 'none';
+          
+          // Load the main game script
+          const script = document.createElement('script');
+          script.type = 'module';
+          script.src = './src/main.js';
+          script.onerror = function() {
+            document.getElementById('loading').textContent = 'Failed to load game. Please refresh.';
+            document.getElementById('loading').style.display = 'block';
+          };
+          document.body.appendChild(script);
+        } else {
+          document.getElementById('loading').textContent = 'Game engine not loaded. Please refresh.';
+        }
+      }
+      
+      // Load Phaser from CDN
+      const phaserScript = document.createElement('script');
+      phaserScript.src = 'https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.min.js';
+      phaserScript.onload = loadGame;
+      phaserScript.onerror = function() {
+        document.getElementById('loading').textContent = 'Failed to load from CDN. Please check your internet connection.';
+      };
+      document.head.appendChild(phaserScript);
+    </script>
   </body>
 </html>
