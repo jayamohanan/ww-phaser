@@ -3,6 +3,16 @@ export default class MenuScene extends Phaser.Scene {
     super({ key: 'MenuScene' });
   }
 
+  // Helper methods for responsive design
+  getOptimalFontSize(base) {
+    const { width } = this.scale;
+    return Math.max(12, Math.floor(base * (width < 768 ? 0.8 : 1.0)));
+  }
+
+  getButtonSize(w, h) {
+    return { width: Math.max(44, w), height: Math.max(44, h) };
+  }
+
   preload() {
     // Create simple colored rectangles as placeholders for buttons
     this.load.image('button', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==');
@@ -11,17 +21,13 @@ export default class MenuScene extends Phaser.Scene {
   create() {
     const { width, height } = this.scale;
     
-    // Simple responsive helper functions
-    const getOptimalFontSize = (base) => Math.max(12, Math.floor(base * (width < 768 ? 0.8 : 1.0)));
-    const getButtonSize = (w, h) => ({ width: Math.max(44, w), height: Math.max(44, h) });
-    
     // Background gradient effect
     const gradient = this.add.graphics();
     gradient.fillGradientStyle(0x667eea, 0x667eea, 0x764ba2, 0x764ba2, 1, 1, 1, 1);
     gradient.fillRect(0, 0, width, height);
 
     // Title
-    const titleSize = getOptimalFontSize(64);
+    const titleSize = this.getOptimalFontSize(64);
     const title = this.add.text(width/2, height/4, 'WORD WEB', {
       fontSize: `${titleSize}px`,
       fontFamily: 'Arial Black',
@@ -38,7 +44,7 @@ export default class MenuScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     // Subtitle
-    const subtitleSize = getOptimalFontSize(24);
+    const subtitleSize = this.getOptimalFontSize(24);
     this.add.text(width/2, height/4 + 80, 'Connect words through letters', {
       fontSize: `${subtitleSize}px`,
       fontFamily: 'Arial',
@@ -48,7 +54,7 @@ export default class MenuScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     // Buttons with responsive sizing
-    const buttonSize = getButtonSize(240, 50);
+    const buttonSize = this.getButtonSize(240, 50);
     this.createButton(width/2, height/2, 'PLAY GAME', buttonSize, () => {
       this.scene.start('GameScene');
     });
@@ -58,7 +64,7 @@ export default class MenuScene extends Phaser.Scene {
     });
 
     // Instructions
-    const instructionSize = getOptimalFontSize(18);
+    const instructionSize = this.getOptimalFontSize(18);
     this.add.text(width/2, height - 50, 'Drag words to slots • Connect matching letters', {
       fontSize: `${instructionSize}px`,
       fontFamily: 'Arial',
@@ -77,7 +83,7 @@ export default class MenuScene extends Phaser.Scene {
     button.lineStyle(3, 0x2980b9);
     button.strokeRoundedRect(-buttonSize.width/2, -buttonSize.height/2, buttonSize.width, buttonSize.height, 10);
 
-    const textSize = getOptimalFontSize(20);
+    const textSize = this.getOptimalFontSize(20);
     const buttonText = this.add.text(0, 0, text, {
       fontSize: `${textSize}px`,
       fontFamily: 'Arial',
