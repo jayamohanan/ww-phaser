@@ -1,0 +1,39 @@
+{
+  "name": "word-web-game",
+  "version": "1.0.0",
+  "description": "Word Web - Interactive word connection puzzle game for Poki",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server --port=8080",
+    "dev": "live-server --port=8080 --watch=src",
+    "test": "echo \"Word Web game ready for testing\" && exit 0"
+  },
+  "keywords": [
+    "game",
+    "puzzle",
+    "word",
+    "poki",
+    "phaser",
+    "educational",
+    "javascript",
+    "html5",
+    "responsive",
+    "mobile"
+  ],
+  "author": "Game Developer",
+  "license": "MIT",
+  "dependencies": {
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "word-web-game"
+  },
+  "homepage": ".",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
