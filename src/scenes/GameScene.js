@@ -2,25 +2,15 @@ import WordSlot from '../objects/WordSlot.js';
 import DraggableWord from '../objects/DraggableWord.js';
 import ConnectionLine from '../objects/ConnectionLine.js';
 import { LevelManager } from '../data/LevelManager.js';
-import { ResponsiveManager, AudioManager, GameState, ParticleSystem } from '../utils/GameUtils.js';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super({ key: 'GameScene' });
     this.levelManager = new LevelManager();
-    this.gameState = new GameState();
   }
 
   create() {
     const { width, height } = this.scale;
-    
-    // Initialize managers
-    this.responsiveManager = new ResponsiveManager(this);
-    this.audioManager = new AudioManager(this);
-    this.particleSystem = new ParticleSystem(this);
-    
-    // Initialize audio
-    this.audioManager.preloadSounds();
     
     // Background
     this.createBackground();
@@ -278,26 +268,24 @@ export default class GameScene extends Phaser.Scene {
     const allConnectionsValid = this.wordSlots.every(slot => slot.checkConnections());
     
     if (allSlotsFilled && allConnectionsValid) {
-      // Play success sound
-      this.audioManager.playSound('success');
-      
-      // Create particle effects
-      this.wordSlots.forEach(slot => {
-        this.particleSystem.createSuccessEffect(slot.x, slot.y);
-      });
-      
       // Mark level as completed
       const currentLevel = this.levelManager.getCurrentLevel();
       if (currentLevel) {
-        this.gameState.completeLevel(currentLevel.id, Date.now());
+        // Save completion to localStorage
+        try {
+          const completed = JSON.parse(localStorage.getItem('wordweb_completed') || '[]');
+          if (!completed.includes(currentLevel.id)) {
+            completed.push(currentLevel.id);
+            localStorage.setItem('wordweb_completed', JSON.stringify(completed));
+          }
+        } catch (e) {
+          console.warn('Could not save progress');
+        }
       }
       
       this.time.delayedCall(500, () => {
         this.showSuccessMessage();
       });
-    } else {
-      // Play click sound for word placement
-      this.audioManager.playSound('click');
     }
     
     // Update connection line visuals

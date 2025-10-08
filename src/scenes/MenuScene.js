@@ -1,5 +1,3 @@
-import { ResponsiveManager } from '../utils/GameUtils.js';
-
 export default class MenuScene extends Phaser.Scene {
   constructor() {
     super({ key: 'MenuScene' });
@@ -13,8 +11,9 @@ export default class MenuScene extends Phaser.Scene {
   create() {
     const { width, height } = this.scale;
     
-    // Initialize responsive manager
-    this.responsiveManager = new ResponsiveManager(this);
+    // Simple responsive helper functions
+    const getOptimalFontSize = (base) => Math.max(12, Math.floor(base * (width < 768 ? 0.8 : 1.0)));
+    const getButtonSize = (w, h) => ({ width: Math.max(44, w), height: Math.max(44, h) });
     
     // Background gradient effect
     const gradient = this.add.graphics();
@@ -22,7 +21,7 @@ export default class MenuScene extends Phaser.Scene {
     gradient.fillRect(0, 0, width, height);
 
     // Title
-    const titleSize = this.responsiveManager.getOptimalFontSize(64);
+    const titleSize = getOptimalFontSize(64);
     const title = this.add.text(width/2, height/4, 'WORD WEB', {
       fontSize: `${titleSize}px`,
       fontFamily: 'Arial Black',
@@ -39,7 +38,7 @@ export default class MenuScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     // Subtitle
-    const subtitleSize = this.responsiveManager.getOptimalFontSize(24);
+    const subtitleSize = getOptimalFontSize(24);
     this.add.text(width/2, height/4 + 80, 'Connect words through letters', {
       fontSize: `${subtitleSize}px`,
       fontFamily: 'Arial',
@@ -49,7 +48,7 @@ export default class MenuScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     // Buttons with responsive sizing
-    const buttonSize = this.responsiveManager.getButtonSize(240, 50);
+    const buttonSize = getButtonSize(240, 50);
     this.createButton(width/2, height/2, 'PLAY GAME', buttonSize, () => {
       this.scene.start('GameScene');
     });
@@ -59,7 +58,7 @@ export default class MenuScene extends Phaser.Scene {
     });
 
     // Instructions
-    const instructionSize = this.responsiveManager.getOptimalFontSize(18);
+    const instructionSize = getOptimalFontSize(18);
     this.add.text(width/2, height - 50, 'Drag words to slots • Connect matching letters', {
       fontSize: `${instructionSize}px`,
       fontFamily: 'Arial',
@@ -78,7 +77,7 @@ export default class MenuScene extends Phaser.Scene {
     button.lineStyle(3, 0x2980b9);
     button.strokeRoundedRect(-buttonSize.width/2, -buttonSize.height/2, buttonSize.width, buttonSize.height, 10);
 
-    const textSize = this.responsiveManager.getOptimalFontSize(20);
+    const textSize = getOptimalFontSize(20);
     const buttonText = this.add.text(0, 0, text, {
       fontSize: `${textSize}px`,
       fontFamily: 'Arial',
